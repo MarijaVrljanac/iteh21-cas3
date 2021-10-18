@@ -1,3 +1,49 @@
+<?php
+
+require "dbBroker.php";
+require "model/user.php"; //ili include
+
+session_start();
+if(isset($_POST['username']) && isset($_POST['password'])){
+    $uname = $_POST['username'];
+    $upass = $_POST['password'];
+
+    // $conn = new mysqli(); //pregazena konekcija iz dbBroker.php
+
+    $korisnik = new User(1, $uname, $upass);
+    // $odg = $korisnik->logInUser($uname, $upass, $conn);
+    // $odg = User::logInUser($uname, $upass, $conn); //pristup  statickim funkcijama preko klase
+    $odg = User::logInUser($korisnik, $conn); //pristup  statickim funkcijama preko klase
+
+
+    if($odg->num_rows==1){
+        echo `<script>
+        console.log("Uspesno ste se prijavili.");
+    </script>`; //` -> backtick - sluzi za pisanje stringa u vise redova
+    $_SESSION['user_id'] = $korisnik->id;
+    header('Location: home.php');
+    exit();
+    }else{
+        echo `<script>
+        console.log("Niste se prijavili.");
+    </script>`;
+    }
+
+
+
+
+
+
+
+}
+
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
